@@ -1,13 +1,21 @@
 "use strict";
 
 // Block 1
-const menuIds = ["home", "shop", "cart"];
-const handlersA = [];
-const handlersB = [];
-for (var i = 0; i < menuIds.length; i++) handlersA.push(() => menuIds[i]);
-for (let j = 0; j < menuIds.length; j++) handlersB.push(() => menuIds[j]);
-console.log("2a:", handlersA.map((f) => f()));
-console.log("2b:", handlersB.map((f) => f()));
+function Vehicle(make) {
+  this.make = make;
+}
+Vehicle.prototype.describe = function () {
+  return `${this.make} vehicle`;
+};
+class Car extends Vehicle {
+  describe() {
+    return `${this.make} car`;
+  }
+}
+const myCar = new Car("Toyota");
+console.log("7a:", myCar.describe());
+console.log("7b:", myCar instanceof Vehicle);
+console.log("7c:", Object.getPrototypeOf(Car.prototype) === Vehicle.prototype);
 
 //  Block 2
 const cart = {
@@ -27,11 +35,16 @@ try {
   console.log("3b:", e.name);
 }
 
-//  Block 3
-const user = { name: "Ada", address: { city: "Oslo" }, roles: ["admin"] };
-const clone = { ...user };
-clone.address.city = "Bergen";
-console.log("6a:", user.address.city);
+// Block 3
+function* retryDelays() {
+  let delay = 1;
+  while (true) {
+    yield delay;
+    delay *= 2;
+  }
+}
+const take = (g, n) => Array.from({ length: n }, () => g.next().value);
+console.log("9a:", take(retryDelays(), 8));
 
 //  Block 4
 const fetchResource = (ms, value) =>
