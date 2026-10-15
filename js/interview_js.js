@@ -1,80 +1,48 @@
 "use strict";
 
 // Block 1
-function Vehicle(make) {
-  this.make = make;
-}
-Vehicle.prototype.describe = function () {
-  return `${this.make} vehicle`;
-};
-class Car extends Vehicle {
-  describe() {
-    return `${this.make} car`;
-  }
-}
-const myCar = new Car("Toyota");
-console.log("7a:", myCar.describe());
-console.log("7b:", myCar instanceof Vehicle);
-console.log("7c:", Object.getPrototypeOf(Car.prototype) === Vehicle.prototype);
+const sessionCache = {};
+const userA = { id: 1 };
+const userB = { id: 2 };
+sessionCache[userA] = "Alice";
+sessionCache[userB] = "Bob";
+console.log("15a:", sessionCache[userA]);
+console.log("15b:", Object.keys(sessionCache));
+const sessionMap = new Map([
+  [userA, "Alice"],
+  [userB, "Bob"],
+]);
+console.log("15c:", sessionMap.get(userA), sessionMap.size);
 
-//  Block 2
-const cart = {
-  items: 0,
-  addViaArrow: () => {
-    return this?.items;
-  },
-  addItem() {
-    return ++this.items;
-  },
-};
-console.log("3a:", cart.addItem());
-const add = cart.addItem;
-try {
-  console.log("3b:", add());
-} catch (e) {
-  console.log("3b:", e.name);
-}
+// Block 2
+const prices = [100, 25, 3, 1000];
+const sortedPrices = prices.sort();
+console.log("12a:", sortedPrices);
+console.log("12b:", sortedPrices === prices);
+console.log("12c:", [...prices].sort((a, b) => a - b));
 
 // Block 3
-function* retryDelays() {
-  let delay = 1;
-  while (true) {
-    yield delay;
-    delay *= 2;
-  }
-}
-const take = (g, n) => Array.from({ length: n }, () => g.next().value);
-console.log("9a:", take(retryDelays(), 8));
+const prefs = { volume: 0, nickname: "", timeout: null };
+console.log("14a:", prefs.volume || 50, prefs.volume ?? 50);
+console.log("14b:", prefs.nickname || "Guest", prefs.nickname ?? "Guest");
+console.log("14c:", prefs.timeout ?? 3000, prefs.retries ?? 3);
+console.log("14d:", prefs.theme?.color);
 
-//  Block 4
-const fetchResource = (ms, value) =>
-  new Promise((res) => setTimeout(() => res(value), ms));
+// Block 4
+const appSettings = Object.freeze({ theme: "dark", flags: { beta: false } });
+try {
+  appSettings.theme = "light";
+} catch (e) {
+  console.log("11a:", e.name);
+}
+appSettings.flags.beta = true;
+console.log("11b:", appSettings.theme, appSettings.flags.beta);
 
-async function loadDashboardV1() {
-  const t = Date.now();
-  await fetchResource(50, "profile");
-  await fetchResource(50, "orders");
-  return Date.now() - t;
-}
-async function loadDashboardV2() {
-  const t = Date.now();
-  await Promise.all([fetchResource(50, "profile"), fetchResource(50, "orders")]);
-  return Date.now() - t;
-}
-(async () => {
-  console.log("8a:", await loadDashboardV1(), "ms");
-  console.log("8b:", await loadDashboardV2(), "ms");
-})();
-
-//  Block 5
-function createSearchHandler(fn, wait) {
-  let timer;
-  return function (...args) {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn.apply(this, args), wait);
-  };
-}
-const onSearch = createSearchHandler((query) => console.log("10a:", query), 30);
-onSearch("l");
-onSearch("la");
-onSearch("laptop");
+// Block 5
+console.log("5a:", [] + []);
+console.log("5b:", [] + {});
+const total = 0.1 + 0.2;
+console.log("5c:", total === 0.3);
+const tags = ["php", "js", "go"];
+console.log("5d:", tags == "php,js,go");
+console.log("5e:", null == undefined, null === undefined);
